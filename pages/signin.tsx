@@ -18,8 +18,8 @@ export default function SignIn({providers}: Props) {
         justify-center text-center py-20">
         {Object.values(providers).map((provider) => (
           <div key={provider.name}>
-            <button className="rounded-full bg-blue hover:bg-gray-lightest
-            hover:text-blue font-bold text-gray-lightest py-2 px-4"
+            <button className="rounded-full bg-blue hover:bg-blue-light
+            font-bold text-gray-lightest py-2 px-4"
             onClick={() => signIn(provider.id, {
               callbackUrl: `${window.location.origin}/dashboard`,
             })}>

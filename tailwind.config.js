@@ -7,12 +7,14 @@ module.exports = {
     colors: {
       'white': '#FFFFFF',
       'blue': {
-        light: '#878CFF',
+        lighter: '#878CFF',
+        light: '#242DF2',
         DEFAULT: '#2129DD',
         dark: '#000585',
       },
       'gray': {
         lightest: '#DFE0EC',
+        lighter: '#8183B2',
         light: '#6E7099',
         DEFAULT: '#4A4B66',
         dark: '#191A22',

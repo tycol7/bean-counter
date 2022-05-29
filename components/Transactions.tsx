@@ -76,8 +76,8 @@ export default function Transactions() {
         <div>
           <div className="flex justify-start space-x-4">
             <h2 className="text-3xl font-bold">Transactions</h2>
-            <button className="rounded-full bg-blue hover:bg-gray-lightest
-            hover:text-blue font-bold text-gray-lightest py-2 px-4"
+            <button className="rounded-full bg-blue hover:bg-blue-light
+            font-bold text-gray-lightest py-2 px-4"
             onClick={openModal}>
               Add Transaction
             </button>
@@ -203,19 +203,20 @@ export default function Transactions() {
                 <label className="block mt-2">
                   <span className="text-gray-lightest">Attachment</span>
                   <input type="file" id="attachment" name="attachment"
-                    className="file:mt-1 block w-full
-                file:rounded-full file:border-none file:bg-blue-light file:px-2
-                file:py-1 hover:file:bg-gray-lightest hover:file:text-blue" />
+                    className="file:mt-1 block w-full file:text-gray-lightest
+                file:rounded-full file:border-none file:bg-gray-light file:px-2
+                file:py-1 hover:file:bg-gray-lighter
+                hover:file:cursor-pointer" />
                 </label>
                 <div className="flex">
                   <button type="submit"
                     className="block mt-4 rounded-full bg-blue px-3
-              font-medium py-1 hover:bg-gray-lightest hover:text-blue"
+              font-medium py-1 hover:bg-blue-light"
                     ref={completeButtonRef}>
                 Save
                   </button>
                   <button className="block mt-4 ml-2 rounded-full bg-gray-light
-                px-3 font-medium py-1 hover:bg-gray-lightest hover:text-blue"
+                px-3 font-medium py-1 hover:bg-gray-lighter"
                   onClick={closeModal}>
                 Cancel
                   </button>

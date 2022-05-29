@@ -35,7 +35,7 @@ export default function UserInfo() {
                 <button onClick={() => signOut({
                   callbackUrl: `${window.location.origin}`,
                 })} className={`${
-                active ? 'text-gray-lightest' : 'text-blue-light'} 
+                active ? 'text-gray-lightest' : 'text-blue-lighter'} 
                 w-full text-left font-medium text-sm mt-2`}>Logout</button>
               )}
             </Menu.Item>

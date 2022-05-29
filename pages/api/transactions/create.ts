@@ -9,7 +9,7 @@ import {Storage} from '@google-cloud/storage';
 import FormData from 'form-data';
 import fs from 'fs';
 import {getSession} from 'next-auth/react';
-import {prisma} from '../../db';
+import {prisma} from '../../../lib/db';
 import {TransactionType} from '@prisma/client';
 
 const handler = nextConnect();

@@ -136,7 +136,7 @@ export default function Transactions() {
                   <div className="table-cell align-middle flex border-b
                   p-4 border-gray">
                     {transaction.attachment && (
-                      <a 
+                      <a
                         href={`https://storage.googleapis.com/bean-counter/${transaction.attachment}`} rel="noreferrer" target="_blank">
                         <FeatherIcon icon="paperclip" size={16}
                           className="hover:text-white hover:cursor-pointer" />

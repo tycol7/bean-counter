@@ -33,7 +33,7 @@ handler.post(async (req: NextApiRequest,
     res: NextApiResponse) => {
   const session = await getSession({req});
   const fields: FormFields = req.body;
-  const upload: FileUpload = req.files.attachment[0];
+  const upload: FileUpload = (req as any).files.attachment[0];
 
   if (!session) {
     res.status(401); // unauthorized
@@ -73,7 +73,7 @@ handler.post(async (req: NextApiRequest,
       body: formData,
     };
 
-    await fetch(authResponse.url, uploadOptions);
+    await fetch(authResponse.url, uploadOptions as any);
     attachmentName = upload.originalFilename;
   }
 

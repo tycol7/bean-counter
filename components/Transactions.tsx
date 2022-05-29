@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import {format} from 'date-fns';
 import Price from './Price';
 import {Dialog} from '@headlessui/react';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import FeatherIcon from 'feather-icons-react';
 import FormData from 'form-data';
 import axios from 'axios';

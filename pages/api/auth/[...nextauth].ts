@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import {prisma} from '../../db';
+import {prisma} from '../../../lib/db';
 
 export default NextAuth({
   providers: [

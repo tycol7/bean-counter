@@ -53,7 +53,7 @@ handler.post(async (req: NextApiRequest,
     });
     const bucket = storage.bucket(process.env.BUCKET_NAME);
     const file = bucket.file(upload.originalFilename);
-
+    console.log(file);
     const authOptions = {
       expires: Date.now() + 1 * 60 * 1000, // 1 minute
       fields: {'x-goog-meta-test': 'data'},

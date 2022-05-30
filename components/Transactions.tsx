@@ -184,7 +184,7 @@ export default function Transactions() {
               </div>
             </div>
           </div>) :
-          <p className="mt-4">No transactions yet. Add one to start!</p>
+          <p className="w-full">No transactions yet. Add one to start!</p>
         }
       </div>
       <Dialog as="div" className="relative z-10" open={isOpen}

@@ -59,7 +59,7 @@ handler.post(async (req: NextApiRequest,
       fields: {'x-goog-meta-test': 'data'},
     };
     const [authResponse] = await file.generateSignedPostPolicyV4(authOptions);
-
+    console.log(authResponse);
     /* Upload file to Google Cloud and get the URL */
     const formData = new FormData();
     Object.entries({...authResponse.fields}).forEach(([key, value]) => {
@@ -86,6 +86,8 @@ handler.post(async (req: NextApiRequest,
     attachment: attachmentName,
     userId: session.user.id,
   };
+
+  console.log(transaction);
 
   await prisma.transaction.create({
     data: transaction,

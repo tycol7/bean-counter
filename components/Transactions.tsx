@@ -169,14 +169,14 @@ export default function Transactions() {
                   <input type="text" id="description" name="description"
                     required className="mt-1 block w-full rounded-md
                 bg-gray border-gray-light shadow-sm text-white
-                focus:ring focus:ring-blue-light focus:ring-opacity-50" />
+                focus:ring focus:ring-blue-lighter focus:ring-opacity-50" />
                 </label>
                 <label className="block mt-2" htmlFor="date">
                   <span className="text-gray-lightest">Date</span>
                   <input type="date" id="date" name="date" required
                     className="mt-1 block w-full rounded-md
                 bg-gray border-gray-light shadow-sm text-white
-                focus:ring focus:ring-blue-light focus:ring-opacity-50" />
+                focus:ring focus:ring-blue-lighter focus:ring-opacity-50" />
                 </label>
                 <label className="block mt-2" htmlFor="amount">
                   <span className="text-gray-lightest">Amount</span>
@@ -184,7 +184,7 @@ export default function Transactions() {
                     required
                     className="mt-1 block w-40 rounded-md
                 bg-gray border-gray-light shadow-sm text-white
-                focus:ring focus:ring-blue-light focus:ring-opacity-50" />
+                focus:ring focus:ring-blue-lighter focus:ring-opacity-50" />
                 </label>
                 <label className="inline-flex items-center mt-2">
                   <input type="radio" name="type" value="CREDIT"

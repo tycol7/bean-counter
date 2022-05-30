@@ -35,20 +35,53 @@ export default function Transactions() {
   const balance = data[0];
   const transactions: Transaction[] = data[1];
 
+  /* https://github.com/leerob/nextjs-gcp-storage/blob/main/pages/index.js */
   const addTransaction = async (event: React.ChangeEvent<any>) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    axios.post('/api/transactions/create', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }).then((res) => {
-      /* TODO: Update the balance and transactions without reloading page */
-      alert('Transaction added!');
-      window.location.reload();
-    }).catch((err) => {
-      setMessage('Something went wrong. Please try again.');
+    event.preventDefault(); // Prevents default form submit behavior
+
+    /* Upload file to Google Cloud */
+    const file = event.target.attachment.files[0];
+    const filename = encodeURIComponent(file.name);
+    const res = await fetch(`/api/transactions/upload-url?file=${filename}`);
+    const {url, fields} = await res.json();
+    let formData = new FormData();
+
+    Object.entries({...fields, file}).forEach(([key, value]) => {
+      formData.append(key, value);
     });
+
+    const uploadOptions = {
+      method: 'POST',
+      body: formData,
+    };
+
+    /* TODO: Fix `any` workarounds. See:
+    https://github.com/form-data/form-data/issues/512 */
+    const upload = await fetch(url, uploadOptions as any);
+    if (upload.ok) {
+      /* Save transaction to database */
+      formData = new FormData(event.target);
+      const jsonData = {};
+      (formData as any).forEach((value, key) => {
+        if (key != 'attachment') {
+          jsonData[key] = value;
+        }
+      });
+      jsonData['fileName'] = filename;
+      axios.post('/api/transactions/create', jsonData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => {
+        /* TODO: Update the balance and transactions without reloading page */
+        alert('Transaction added!');
+        window.location.reload();
+      }).catch((err) => {
+        setMessage('Something went wrong. Please try again.');
+      });
+    } else {
+      setMessage('Something went wrong. Please try again.');
+    }
   };
 
   function openModal() {
@@ -201,12 +234,14 @@ export default function Transactions() {
                   <span className="text-gray-lightest ml-2">Debit</span>
                 </label>
                 <label className="block mt-2">
-                  <span className="text-gray-lightest">Attachment</span>
+                  <span className="text-gray-lightest">Attachment
+                  (.pdf, .png, or .jpeg)</span>
                   <input type="file" id="attachment" name="attachment"
                     className="file:mt-1 block w-full file:text-gray-lightest
                 file:rounded-full file:border-none file:bg-gray-light file:px-2
                 file:py-1 hover:file:bg-gray-lighter
-                hover:file:cursor-pointer" />
+                hover:file:cursor-pointer"
+                    accept="image/jpeg, image/png, application/pdf" />
                 </label>
                 <div className="flex">
                   <button type="submit"

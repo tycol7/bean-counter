@@ -3,106 +3,42 @@
 /* How to upload files in Next.js: https://flaviocopes.com/nextjs-upload-files/ */
 
 import type {NextApiRequest, NextApiResponse} from 'next';
-import middleware from './middleware';
-import nextConnect from 'next-connect';
-import {Storage} from '@google-cloud/storage';
-import FormData from 'form-data';
-import fs from 'fs';
-import {getSession} from 'next-auth/react';
 import {prisma} from '../../../lib/db';
 import {TransactionType} from '@prisma/client';
-
-const handler = nextConnect();
-handler.use(middleware);
+import {getSession} from 'next-auth/react';
 
 type FormFields = {
-  description: string[]
-  date: string[]
-  amount: string[]
-  type: TransactionType[]
+  description: string
+  date: string
+  amount: string
+  type: TransactionType
+  fileName: string
 }
 
-type FileUpload = {
-  fieldName: string
-  originalFilename: string
-  path: string
-  size: number
-}
-
-handler.post(async (req: NextApiRequest,
-    res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest,
+    res: NextApiResponse) {
   const session = await getSession({req});
-  const fields: FormFields = req.body;
-  const upload: FileUpload = (req as any).files.attachment[0];
-
-  if (!session) {
-    res.status(401); // unauthorized
-    return;
-  }
-
-  /* Only upload to cloud if attachment exists */
-  let attachmentName = null;
-  if (upload.size > 0) {
-    /* Authenticate to Google Cloud */
-    const storage = new Storage({
-      projectId: process.env.GOOGLE_PROJECT_ID,
-      credentials: {
-        client_email: process.env.CLIENT_EMAIL,
-        private_key: process.env.PRIVATE_KEY,
-      },
-    });
-    const bucket = storage.bucket(process.env.BUCKET_NAME);
-    const file = bucket.file(upload.originalFilename);
-    console.log(file);
-    const authOptions = {
-      expires: Date.now() + 1 * 60 * 1000, // 1 minute
-      fields: {'x-goog-meta-test': 'data'},
-    };
-    const [authResponse] = await file.generateSignedPostPolicyV4(authOptions);
-    console.log(authResponse);
-    /* Upload file to Google Cloud and get the URL */
-    const formData = new FormData();
-    Object.entries({...authResponse.fields}).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    formData.append('file', fs.createReadStream(upload.path));
-
-    const uploadOptions = {
-      method: 'POST',
-      body: formData,
+  if (session) {
+    const fields: FormFields = req.body;
+    /* Save the transaction to the database */
+    const transaction = {
+      transactionDate: new Date(fields.date),
+      description: fields.description,
+      amount: parseFloat(fields.amount),
+      type: fields.type,
+      attachment: fields.fileName,
+      userId: session.user.id,
     };
 
-    await fetch(authResponse.url, uploadOptions as any);
-    attachmentName = upload.originalFilename;
+    await prisma.transaction.create({
+      data: transaction,
+    });
+
+    res.status(200).json({
+      data: transaction,
+    });
+  } else {
+    res.status(401); // Unauthorized
   }
-
-  /* Save the transaction to the database */
-  const transaction = {
-    transactionDate: new Date(fields.date[0]),
-    description: fields.description[0],
-    amount: parseFloat(fields.amount[0]),
-    type: fields.type[0],
-    attachment: attachmentName,
-    userId: session.user.id,
-  };
-
-  console.log(transaction);
-
-  await prisma.transaction.create({
-    data: transaction,
-  });
-
-  res.status(200).json({
-    data: transaction,
-  });
   res.end();
-});
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-export default handler;
+}

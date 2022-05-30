@@ -98,18 +98,19 @@ export default function Transactions() {
 
   return (
     <>
-      <div className="flex flex-wrap overflow-scroll text-gray-lightest">
-        <div className="mb-8 sticky top-0">
-          <h2 className="w-64 text-3xl font-bold">Balance</h2>
-          <p className="mt-4 text-2xl font-light">
-            {balance ? <Price amount={balance} /> : `$0.00`}
-          </p>
-        </div>
-        <div>
-          <div className="flex justify-start space-x-4">
+      <div className="flex flex-wrap text-gray-lightest">
+        <div className="mb-2">
+          <div>
+            <h2 className="w-64 text-3xl font-bold">Balance</h2>
+            <p className="mt-2 text-2xl font-light">
+              {balance ? <Price amount={balance} /> : `$0.00`}
+            </p>
+          </div>
+          <div className="flex justify-start flex-col mt-4
+          sm:flex-row sm:space-x-4">
             <h2 className="text-3xl font-bold">Transactions</h2>
             <button className="rounded-full bg-blue hover:bg-blue-light
-            font-bold text-gray-lightest py-2 px-4"
+            font-bold text-gray-lightest py-2 px-4 w-fit mt-2 sm:mt-0"
             onClick={openModal}>
               Add Transaction
             </button>
@@ -120,69 +121,71 @@ export default function Transactions() {
             </div>
           )
           }
-          {transactions.length != 0 ? (
-          <div className="table table-auto w-full text-sm">
-            <div className="table-header-group font-bold">
-              <div className="table-row">
-                <div className="table-cell border-b p-4 border-gray text-left
+        </div>
+        {transactions.length != 0 ? (
+          <div className="w-full overflow-x-scroll">
+            <div className="table table-auto w-full text-sm">
+              <div className="table-header-group font-bold">
+                <div className="table-row">
+                  <div className="table-cell border-b p-4 border-gray text-left
               uppercase text-gray-light text-sm`">
                 Date
-                </div>
-                <div className="table-cell border-b p-4 border-gray text-left
+                  </div>
+                  <div className="table-cell border-b p-4 border-gray text-left
               uppercase text-gray-light text-sm">
                 Description
-                </div>
-                <div className="table-cell border-b p-4 border-gray text-left
+                  </div>
+                  <div className="table-cell border-b p-4 border-gray text-left
               uppercase text-gray-light text-sm">
                 Debit
-                </div>
-                <div className="table-cell border-b p-4 border-gray text-left
+                  </div>
+                  <div className="table-cell border-b p-4 border-gray text-left
               uppercase text-gray-light text-sm">
                 Credit
-                </div>
-                <div className="table-cell border-b p-4 border-gray text-left
+                  </div>
+                  <div className="table-cell border-b p-4 border-gray text-left
               uppercase text-gray-light text-sm">
                 Attachment
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="table-row-group">
-              {transactions.map((transaction) => (
-                <div className="table-row" key={transaction.id}>
-                  <div className="table-cell border-b p-4 border-gray">
-                    {format(new Date(transaction.transactionDate),
-                        'MMM dd, yyyy',
-                    )}
-                  </div>
-                  <div className="table-cell border-b p-4 border-gray">
-                    {transaction.description}
-                  </div>
-                  <div className="table-cell border-b p-4 border-gray">
-                    <Price amount={transaction.type === 'DEBIT' &&
+              <div className="table-row-group">
+                {transactions.map((transaction) => (
+                  <div className="table-row" key={transaction.id}>
+                    <div className="table-cell border-b p-4 border-gray">
+                      {format(new Date(transaction.transactionDate),
+                          'MMM dd, yyyy',
+                      )}
+                    </div>
+                    <div className="table-cell border-b p-4 border-gray">
+                      {transaction.description}
+                    </div>
+                    <div className="table-cell border-b p-4 border-gray">
+                      <Price amount={transaction.type === 'DEBIT' &&
                    transaction.amount} />
-                  </div>
-                  <div className="table-cell border-b p-4 border-gray">
-                    <Price amount={transaction.type === 'CREDIT' &&
+                    </div>
+                    <div className="table-cell border-b p-4 border-gray">
+                      <Price amount={transaction.type === 'CREDIT' &&
                    transaction.amount} />
-                  </div>
-                  <div className="table-cell align-middle flex border-b
+                    </div>
+                    <div className="table-cell align-middle flex border-b
                   p-4 border-gray">
-                    {transaction.attachment && (
-                      <a
-                        href={`https://storage.googleapis.com/bean-counter/${transaction.attachment}`} rel="noreferrer" target="_blank">
-                        <FeatherIcon icon="paperclip" size={16}
-                          className="hover:text-white hover:cursor-pointer" />
-                      </a>
-                    )
-                    }
+                      {transaction.attachment && (
+                        <a
+                          href={`https://storage.googleapis.com/bean-counter/${transaction.attachment}`} rel="noreferrer" target="_blank">
+                          <FeatherIcon icon="paperclip" size={16}
+                            className="hover:text-white hover:cursor-pointer" />
+                        </a>
+                      )
+                      }
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>) :
           <p className="mt-4">No transactions yet. Add one to start!</p>
-          }
-        </div>
+        }
       </div>
       <Dialog as="div" className="relative z-10" open={isOpen}
         onClose={closeModal} initialFocus={completeButtonRef}>

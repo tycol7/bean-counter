@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest,
       description: fields.description,
       amount: parseFloat(fields.amount),
       type: fields.type,
-      attachment: fields.fileName,
+      attachment: fields.fileName || '',
       userId: session.user.id,
     };
 

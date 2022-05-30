@@ -38,50 +38,49 @@ export default function Transactions() {
   /* https://github.com/leerob/nextjs-gcp-storage/blob/main/pages/index.js */
   const addTransaction = async (event: React.ChangeEvent<any>) => {
     event.preventDefault(); // Prevents default form submit behavior
+    const jsonData = {};
+    if (event.target.attachment.files[0]) {
+      /* Upload file to Google Cloud */
+      const file = event.target.attachment.files[0];
+      const filename = encodeURIComponent(file.name);
+      const res = await fetch(`/api/transactions/upload-url?file=${filename}`);
+      const {url, fields} = await res.json();
+      const formData = new FormData();
 
-    /* Upload file to Google Cloud */
-    const file = event.target.attachment.files[0];
-    const filename = encodeURIComponent(file.name);
-    const res = await fetch(`/api/transactions/upload-url?file=${filename}`);
-    const {url, fields} = await res.json();
-    let formData = new FormData();
-
-    Object.entries({...fields, file}).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    const uploadOptions = {
-      method: 'POST',
-      body: formData,
-    };
-
-    /* TODO: Fix `any` workarounds. See:
-    https://github.com/form-data/form-data/issues/512 */
-    const upload = await fetch(url, uploadOptions as any);
-    if (upload.ok) {
-      /* Save transaction to database */
-      formData = new FormData(event.target);
-      const jsonData = {};
-      (formData as any).forEach((value, key) => {
-        if (key != 'attachment') {
-          jsonData[key] = value;
-        }
+      Object.entries({...fields, file}).forEach(([key, value]) => {
+        formData.append(key, value);
       });
-      jsonData['fileName'] = filename;
-      axios.post('/api/transactions/create', jsonData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => {
-        /* TODO: Update the balance and transactions without reloading page */
-        alert('Transaction added!');
-        window.location.reload();
-      }).catch((err) => {
-        setMessage('Something went wrong. Please try again.');
-      });
-    } else {
-      setMessage('Something went wrong. Please try again.');
+
+      const uploadOptions = {
+        method: 'POST',
+        body: formData,
+      };
+
+      /* TODO: Fix `any` workarounds. See:
+      https://github.com/form-data/form-data/issues/512 */
+      const upload = await fetch(url, uploadOptions as any);
+      if (upload.ok) {
+        jsonData['fileName'] = filename;
+      }
     }
+    /* Save transaction to database */
+    const formData = new FormData(event.target);
+    (formData as any).forEach((value, key) => {
+      if (key != 'attachment') {
+        jsonData[key] = value;
+      }
+    });
+    axios.post('/api/transactions/create', jsonData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((res) => {
+      /* TODO: Update the balance and transactions without reloading page */
+      alert('Transaction added!');
+      window.location.reload();
+    }).catch((err) => {
+      setMessage('Something went wrong. Please try again.');
+    });
   };
 
   function openModal() {

@@ -1,9 +1,28 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable require-jsdoc */
-import type {AppProps} from 'next/app';
+import type {AppProps, NextWebVitalsMetric} from 'next/app';
 import {SessionProvider} from 'next-auth/react';
 import '../styles/globals.css';
 import Head from 'next/head';
+
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  const url = process.env.NEXT_PUBLIC_AXIOM_INGEST_ENDPOINT;
+
+  if (!url) {
+    return;
+  }
+
+  const body = JSON.stringify({
+    route: window.__NEXT_DATA__.page,
+    ...metric,
+  });
+
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(url, body);
+  } else {
+    fetch(url, {body, method: 'POST', keepalive: true});
+  }
+}
 
 function MyApp({Component, pageProps: {session, ...pageProps}}: AppProps) {
   return (

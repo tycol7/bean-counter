@@ -47,12 +47,25 @@ The system uses the following technologies:
 
 ## Data model 
 
-TODO
+The [data model](https://github.com/tycol7/bean-counter/blob/main/prisma/schema.prisma) consists of User and Transaction tables. The relationship between tables is one user to many transactions. Notably, [PlanetScale does not use `FOREIGN KEY`s](https://docs.planetscale.com/learn/operating-without-foreign-key-constraints) and instead relies on the application to enforce referential integrity.
 
 ## Installation
 
-TODO
+To install Bean Counter, clone this repo and run:
 
+```shell
+npm install
+npm run dev
+```
+
+You'll need to rename `example.env` to `.env` and create your own Google API credentials and PlanetScale database.
+
+To publish to production, also run the following to [enable CORS](https://cloud.google.com/storage/docs/configuring-cors) in Google Cloud Storage:
+
+```shell
+gsutil cors set cors-json-file gs://<your-bucket-name>
+```
+Be sure to change the URL in the `cors-json-file` to your application URL.
 ## Future plans
 
 For future plans, see the project's [issue tracker](https://github.com/tycol7/bean-counter/issues).

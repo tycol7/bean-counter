@@ -8,6 +8,7 @@ import React, {useState, useRef} from 'react';
 import FeatherIcon from 'feather-icons-react';
 import FormData from 'form-data';
 import axios from 'axios';
+import {useSession} from 'next-auth/react';
 
 type Transaction = {
     id: number
@@ -24,6 +25,7 @@ export default function Transactions() {
   const {data, error} = useSWR('/api/transactions', fetcher);
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const {data: session} = useSession();
 
   /* Added for accessibility */
   /* https://headlessui.dev/react/dialog#managing-initial-focus */
@@ -38,6 +40,12 @@ export default function Transactions() {
   /* https://github.com/leerob/nextjs-gcp-storage/blob/main/pages/index.js */
   const addTransaction = async (event: React.ChangeEvent<any>) => {
     event.preventDefault(); // Prevents default form submit behavior
+    /* Prevent guests from submitting
+    /* TODO: Allow guests to submit and purge transactions regularly */
+    if (session.user.id == 4) {
+      alert('Sorry, guest users cannot add transactions yet.');
+      return;
+    }
     const jsonData = {};
     if (event.target.attachment.files[0]) {
       /* Upload file to Google Cloud */

@@ -15,18 +15,25 @@ export default function SignIn({providers}: Props) {
   return (
     <div>
       <main className="flex flex-col w-full min-h-screen items-center
-        justify-center text-center py-20">
-        {Object.values(providers).map((provider) => (
-          <div key={provider.name}>
-            <button className="rounded-full bg-blue hover:bg-blue-light
+        justify-center text-center py-20 space-y-4">
+        <div key="Google">
+          <button className="rounded-full bg-blue hover:bg-blue-light
             font-bold text-gray-lightest py-2 px-4"
-            onClick={() => signIn(provider.id, {
-              callbackUrl: `${window.location.origin}/dashboard`,
-            })}>
-            Sign in with {provider.name}
-            </button>
-          </div>
-        ))}
+          onClick={() => signIn('google', {
+            callbackUrl: `${window.location.origin}/dashboard`,
+          })}>
+            Sign in with Google
+          </button>
+        </div>
+        <div key="Guest">
+          <button className="rounded-full bg-gray-light hover:bg-gray-lighter
+            font-bold py-2 px-4"
+          onClick={() => signIn('credentials', {
+            callbackUrl: `${window.location.origin}/dashboard`,
+          })}>
+            Sign in as a Guest
+          </button>
+        </div>
       </main>
     </div>
   );

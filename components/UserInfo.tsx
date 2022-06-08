@@ -12,7 +12,8 @@ export default function UserInfo() {
         <Menu as="div" className="relative inline-block text-left">
           <Menu.Button>
             <img className="w-10 rounded-full hover:cursor-pointer hover:ring-4
-            hover:ring-gray m-1 outline-0" src={session.user.image} alt="Profile" />
+            hover:ring-gray m-1" src={session.user.image}
+            alt="Profile" />
           </Menu.Button>
           <Menu.Items as="section" className="absolute right-0 mt-2 w-56
           p-2 origin-top-right rounded-md bg-gray-dark ring-1 ring-gray

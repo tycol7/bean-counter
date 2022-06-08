@@ -1,6 +1,7 @@
 /* eslint-disable new-cap */
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import {prisma} from '../../../lib/db';
 
 export default NextAuth({
@@ -8,6 +9,14 @@ export default NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_ID || '',
       clientSecret: process.env.GOOGLE_SECRET || '',
+    }),
+    CredentialsProvider({
+      name: 'Guest',
+      credentials: {},
+      async authorize() {
+        return {id: 4, name: 'Guest Account', email: 'guest@example.com',
+          image: '/guest.png', admin: false};
+      },
     }),
   ],
   callbacks: {

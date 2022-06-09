@@ -15,7 +15,7 @@ export default NextAuth({
       credentials: {},
       async authorize() {
         return {id: 4, name: 'Guest Account', email: 'guest@example.com',
-          image: '/guest.png', admin: false};
+          image: '/guest.png', role: 'GUEST'};
       },
     }),
   ],
@@ -32,7 +32,7 @@ export default NextAuth({
         },
       });
       if (getUser) {
-        user.admin = (getUser.role === 'ADMIN');
+        user.role = getUser.role;
         user.id = getUser.id;
         return true;
       }

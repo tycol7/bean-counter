@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest,
     res: NextApiResponse) {
   const session = await getSession({req});
   /* User must be logged in and not Guest */
-  if (session && session.user.id != 4) {
+  if (session && session.user.role != 'GUEST') {
     const fields: FormFields = req.body;
     /* Save the transaction to the database */
     const transaction = {

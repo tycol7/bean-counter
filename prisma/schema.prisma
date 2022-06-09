@@ -38,6 +38,7 @@ model Transaction {
 enum Role {
   USER
   ADMIN
+  GUEST
 }
 
 enum TransactionType {

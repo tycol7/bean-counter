@@ -42,7 +42,7 @@ export default function Transactions() {
     event.preventDefault(); // Prevents default form submit behavior
     /* Prevent guests from submitting
     /* TODO: Allow guests to submit and purge transactions regularly */
-    if (session.user.id == 4) {
+    if (session.user.role === 'GUEST') {
       alert('Sorry, guest users cannot add transactions yet.');
       return;
     }
